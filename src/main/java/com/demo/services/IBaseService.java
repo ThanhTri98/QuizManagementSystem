@@ -11,7 +11,7 @@ public interface IBaseService<E, I> {
 
     Optional<E> findById(I id);
 
-    void add(E entity);
+    void add(E entity) throws Exception;
 
     void update(E entity);
 

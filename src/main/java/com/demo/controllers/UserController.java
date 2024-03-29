@@ -1,5 +1,6 @@
 package com.demo.controllers;
 
+import com.demo.exceptions.UserAlreadyExistsException;
 import com.demo.models.User;
 import com.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,8 @@ import java.util.List;
 /**
  * @author 165139
  */
-@RestController("api/v1/users")
+@RestController
+@RequestMapping("api/v1/users")
 public class UserController {
     private final UserService userService;
 
@@ -51,6 +53,9 @@ public class UserController {
         HttpStatus status = HttpStatus.OK;
         try {
             userService.add(user);
+        } catch (UserAlreadyExistsException uex) {
+            status = HttpStatus.METHOD_NOT_ALLOWED;
+            result = false;
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result = false;

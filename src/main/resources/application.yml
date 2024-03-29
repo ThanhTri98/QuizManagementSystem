@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: QuizManagementSystem
+  datasource:
+    url: jdbc:mysql://localhost:3306/quizmanagementsystem
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+config:
+  jwt:
+    secret: tri19002823447239479342
+    expiration: 3600000
+#    expiration: 15000
+  api:
+    prefix: /api/v1
+

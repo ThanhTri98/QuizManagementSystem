@@ -8,21 +8,20 @@ import jakarta.persistence.*;
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int userId;
+    @Column(name = "user_name")
     private String userName;
+    @Column(unique = true)
     private String email;
     private String password;
-    @ManyToOne
-    @JoinColumn(name = "roleId")
+    @ManyToOne()
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public int getUserId() {
         return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {

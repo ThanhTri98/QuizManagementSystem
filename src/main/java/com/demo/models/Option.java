@@ -8,20 +8,19 @@ import jakarta.persistence.*;
 @Entity
 public class Option {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "option_id")
     private long optionId;
+    @Column(name = "option_text")
     private String optionText;
+    @Column(name = "is_correct")
     private boolean isCorrect;
     @ManyToOne
-    @JoinColumn(name = "questionId")
+    @JoinColumn(name = "question_id")
     private Question question;
 
     public long getOptionId() {
         return optionId;
-    }
-
-    public void setOptionId(long optionId) {
-        this.optionId = optionId;
     }
 
     public String getOptionText() {

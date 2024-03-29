@@ -1,5 +1,6 @@
 package com.demo.services;
 
+import com.demo.exceptions.UserAlreadyExistsException;
 import com.demo.models.User;
 import com.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,12 @@ public class UserService implements IBaseService<User, Integer> {
     }
 
     @Override
-    public void add(User user) {
-        this.userRepository.save(user);
+    public void add(User user) throws UserAlreadyExistsException {
+        // Check email exists
+        if (findUserByEmail(user.getEmail()).orElse(null) == null) {
+            this.userRepository.save(user);
+        }
+        throw new UserAlreadyExistsException(user.getEmail());
     }
 
     @Override

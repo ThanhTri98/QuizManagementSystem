@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * @author 165139
  */
-@RestController("api/v1/quizzes")
+@RestController
+@RequestMapping("api/v1/quizzes")
 public class QuizController {
     private final QuizService quizService;
 

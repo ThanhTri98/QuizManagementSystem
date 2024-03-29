@@ -10,8 +10,10 @@ import java.util.List;
 @Entity
 public class Quiz {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "quiz_id")
     private int quizId;
+    @JoinColumn(name = "quiz_name")
     private String quizName;
     private String description;
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
@@ -19,10 +21,6 @@ public class Quiz {
 
     public int getQuizId() {
         return quizId;
-    }
-
-    public void setQuizId(int quizId) {
-        this.quizId = quizId;
     }
 
     public String getQuizName() {
