@@ -9,15 +9,15 @@ import java.util.List;
  * @author 165139
  */
 @Entity
-@Table(name = "Quiz")
+@Table(name = "quiz")
 @Data
 public class QuizEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "quiz_id")
+    @Column(name = "quiz_id")
     private int quizId;
 
-    @JoinColumn(name = "quiz_name")
+    @Column(name = "quiz_name")
     private String quizName;
 
     private String description;

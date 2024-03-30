@@ -7,7 +7,7 @@ import lombok.Data;
  * @author 165139
  */
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 @Data
 public class UserEntity {
     @Id
@@ -22,6 +22,7 @@ public class UserEntity {
     private String email;
 
     private String password;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;

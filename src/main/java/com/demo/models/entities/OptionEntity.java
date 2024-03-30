@@ -7,7 +7,7 @@ import lombok.Data;
  * @author 165139
  */
 @Entity
-@Table(name = "Option")
+@Table(name = "option")
 @Data
 public class OptionEntity {
     @Id
