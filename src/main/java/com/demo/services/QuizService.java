@@ -1,9 +1,12 @@
 package com.demo.services;
 
-import com.demo.models.Quiz;
+import com.demo.commons.mapper.QuizMapper;
+import com.demo.models.dtos.QuizDTO;
+import com.demo.models.entities.QuizEntity;
 import com.demo.repositories.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +15,7 @@ import java.util.Optional;
  * @author 165139
  */
 @Service
-public class QuizService implements IBaseService<Quiz, Integer> {
+public class QuizService {
     private final QuizRepository quizRepository;
 
     @Autowired
@@ -20,27 +23,23 @@ public class QuizService implements IBaseService<Quiz, Integer> {
         this.quizRepository = quizRepository;
     }
 
-    @Override
-    public List<Quiz> findAll() {
-        return this.quizRepository.findAll();
+    public List<QuizDTO> findAll() {
+        var lst = this.quizRepository.findAll();
+        return CollectionUtils.isEmpty(lst) ? List.of() : QuizMapper.toDTO(lst);
     }
 
-    @Override
-    public Optional<Quiz> findById(Integer id) {
-        return this.quizRepository.findById(id);
+    public Optional<QuizDTO> findById(Integer id) {
+        return this.quizRepository.findById(id).map(QuizMapper::toDTO);
     }
 
-    @Override
-    public void add(Quiz entity) {
+    public void add(QuizEntity entity) {
         this.quizRepository.save(entity);
     }
 
-    @Override
-    public void update(Quiz entity) {
+    public void update(QuizEntity entity) {
         this.quizRepository.save(entity);
     }
 
-    @Override
     public void deleteById(Integer id) {
         this.quizRepository.deleteById(id);
     }

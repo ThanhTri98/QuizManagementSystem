@@ -1,6 +1,6 @@
 package com.demo.controllers;
 
-import com.demo.models.common.ResponseMessage;
+import com.demo.models.http.ResponseMessage;
 import com.demo.services.security.JwtTokenProvider;
 import com.demo.services.security.LoginRequest;
 import com.demo.services.security.UserDetailsImpl;

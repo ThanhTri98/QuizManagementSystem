@@ -34,10 +34,15 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(HttpMethod.GET, "/").permitAll()
+
                                 .requestMatchers(HttpMethod.POST, joinPath("login")).permitAll()
+
                                 .requestMatchers(joinPath("users", "**")).hasRole(Roles.TEACHER.name())
+
                                 .requestMatchers(HttpMethod.GET, joinPath("quizzes", "**")).hasAnyRole(Roles.TEACHER.name(), Roles.STUDENT.name())
+
                                 .requestMatchers(HttpMethod.POST, joinPath("quizzes", "**")).hasRole(Roles.TEACHER.name())
+
                                 .anyRequest().authenticated()
                 )
                 .build();

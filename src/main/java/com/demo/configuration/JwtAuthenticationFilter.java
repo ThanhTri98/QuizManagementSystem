@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws IOException, ServletException {
+                                    @NonNull FilterChain filterChain) throws IOException {
         try {
             if (isPassFilter(request)) {
                 filterChain.doFilter(request, response);

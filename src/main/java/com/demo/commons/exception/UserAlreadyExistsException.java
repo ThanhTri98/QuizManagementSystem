@@ -1,4 +1,4 @@
-package com.demo.exceptions;
+package com.demo.commons.exception;
 
 /**
  * @author 165139

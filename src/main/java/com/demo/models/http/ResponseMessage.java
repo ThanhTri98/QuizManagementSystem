@@ -1,4 +1,4 @@
-package com.demo.models.common;
+package com.demo.models.http;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -18,6 +18,17 @@ public class ResponseMessage<T> {
     public ResponseMessage<T> ok(T data) {
         this.data = data;
         return this;
+    }
+
+    public ResponseMessage<T> ok(T data, String message) {
+        this.message = message;
+        this.isError = false;
+        return ok(data);
+    }
+
+    public ResponseMessage<T> error(T data, String message) {
+        this.data = data;
+        return error(message);
     }
 
     public ResponseMessage<T> error(String message) {

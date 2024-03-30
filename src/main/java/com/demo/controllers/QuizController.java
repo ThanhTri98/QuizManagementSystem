@@ -1,7 +1,8 @@
 
 package com.demo.controllers;
 
-import com.demo.models.Quiz;
+import com.demo.models.dtos.QuizDTO;
+import com.demo.models.entities.QuizEntity;
 import com.demo.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,8 @@ public class QuizController {
     }
 
     @GetMapping("/{quizId}")
-    public ResponseEntity<Quiz> get(@PathVariable("quizId") int quizId) {
-        Quiz quiz = null;
+    public ResponseEntity<QuizDTO> get(@PathVariable("quizId") int quizId) {
+        QuizDTO quiz = null;
         HttpStatus status = HttpStatus.OK;
         try {
             quiz = quizService.findById(quizId).orElse(null);
@@ -36,8 +37,8 @@ public class QuizController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Quiz>> getAll() {
-        List<Quiz> quizzes = List.of();
+    public ResponseEntity<List<QuizDTO>> getAll() {
+        List<QuizDTO> quizzes = List.of();
         HttpStatus status = HttpStatus.OK;
         try {
             quizzes = quizService.findAll();
@@ -48,7 +49,7 @@ public class QuizController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> add(@RequestBody Quiz quiz) {
+    public ResponseEntity<Boolean> add(@RequestBody QuizEntity quiz) {
         boolean result = true;
         HttpStatus status = HttpStatus.OK;
         try {
@@ -61,7 +62,7 @@ public class QuizController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> update(@RequestBody Quiz quiz) {
+    public ResponseEntity<Boolean> update(@RequestBody QuizEntity quiz) {
         boolean result = true;
         HttpStatus status = HttpStatus.OK;
         try {

@@ -1,7 +1,7 @@
 package com.demo.services.security;
 
-import com.demo.models.Role;
-import com.demo.models.User;
+import com.demo.models.entities.RoleEntity;
+import com.demo.models.entities.UserEntity;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,9 +19,9 @@ public class UserDetailsImpl implements UserDetails {
     private final String email;
     private final String password;
     private final String userName;
-    private final Role role;
+    private final RoleEntity role;
 
-    public UserDetailsImpl(@NonNull User user) {
+    public UserDetailsImpl(@NonNull UserEntity user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.userName = user.getUserName();
