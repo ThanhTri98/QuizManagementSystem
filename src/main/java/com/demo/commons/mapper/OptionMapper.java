@@ -33,4 +33,23 @@ public class OptionMapper {
 
         return entities.stream().map(OptionMapper::toDTO).toList();
     }
+
+    public static OptionEntity toEntity(OptionDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        var entity = new OptionEntity();
+        entity.setOptionText(dto.getOptionText());
+        entity.setCorrect(dto.isCorrect());
+        return entity;
+    }
+
+    public static List<OptionEntity> toEntity(List<OptionDTO> dtos) {
+        if (CollectionUtils.isEmpty(dtos)) {
+            return List.of();
+        }
+
+        return dtos.stream().map(OptionMapper::toEntity).toList();
+    }
 }

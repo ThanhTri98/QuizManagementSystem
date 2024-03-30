@@ -43,6 +43,8 @@ public class SecurityConfiguration {
 
                                 .requestMatchers(HttpMethod.POST, joinPath("quizzes", "**")).hasRole(Roles.TEACHER.name())
 
+                                .requestMatchers(HttpMethod.PUT, joinPath("quizzes", "**")).hasRole(Roles.TEACHER.name())
+
                                 .anyRequest().authenticated()
                 )
                 .build();

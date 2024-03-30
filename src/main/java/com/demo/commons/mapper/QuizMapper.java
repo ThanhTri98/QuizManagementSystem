@@ -21,7 +21,7 @@ public class QuizMapper {
         var dto = new QuizDTO();
         dto.setQuizId(entity.getQuizId());
         dto.setQuizName(entity.getQuizName());
-        dto.setDescription(dto.getDescription());
+        dto.setDescription(entity.getDescription());
         dto.setQuestions(QuestionMapper.toDTO(entity.getQuestions()));
         return dto;
     }
@@ -33,4 +33,24 @@ public class QuizMapper {
 
         return entities.stream().map(QuizMapper::toDTO).toList();
     }
+
+    public static QuizEntity toEntity(QuizDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        var entity = new QuizEntity();
+        entity.setQuizName(dto.getQuizName());
+        entity.setDescription(dto.getDescription());
+        return entity;
+    }
+
+    public static List<QuizEntity> toEntity(List<QuizDTO> dtos) {
+        if (CollectionUtils.isEmpty(dtos)) {
+            return List.of();
+        }
+
+        return dtos.stream().map(QuizMapper::toEntity).toList();
+    }
+
 }

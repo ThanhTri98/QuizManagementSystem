@@ -21,6 +21,7 @@ public class QuestionMapper {
         var dto = new QuestionDTO();
         dto.setQuestionId(entity.getQuestionId());
         dto.setQuestionText(entity.getQuestionText());
+        dto.setQuizId(entity.getQuiz().getQuizId());
         dto.setOptions(OptionMapper.toDTO(entity.getOptions()));
         return dto;
     }
@@ -31,6 +32,24 @@ public class QuestionMapper {
         }
 
         return entities.stream().map(QuestionMapper::toDTO).toList();
+    }
+
+    public static QuestionEntity toEntity(QuestionDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        var entity = new QuestionEntity();
+        entity.setQuestionText(dto.getQuestionText());
+        return entity;
+    }
+
+    public static List<QuestionEntity> toEntity(List<QuestionDTO> dtos) {
+        if (CollectionUtils.isEmpty(dtos)) {
+            return List.of();
+        }
+
+        return dtos.stream().map(QuestionMapper::toEntity).toList();
     }
 
 }

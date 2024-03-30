@@ -3,6 +3,7 @@ package com.demo.controllers;
 
 import com.demo.models.dtos.QuizDTO;
 import com.demo.models.entities.QuizEntity;
+import com.demo.models.http.ResponseMessage;
 import com.demo.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,35 +26,38 @@ public class QuizController {
     }
 
     @GetMapping("/{quizId}")
-    public ResponseEntity<QuizDTO> get(@PathVariable("quizId") int quizId) {
-        QuizDTO quiz = null;
+    public ResponseEntity<ResponseMessage<QuizDTO>> get(@PathVariable("quizId") int quizId) {
+        ResponseMessage<QuizDTO> responseMessage = new ResponseMessage<>();
         HttpStatus status = HttpStatus.OK;
         try {
-            quiz = quizService.findById(quizId).orElse(null);
+            responseMessage.ok(this.quizService.findById(quizId).orElse(null));
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+            responseMessage.error(ex.getMessage());
         }
-        return ResponseEntity.status(status).body(quiz);
+        return ResponseEntity.status(status).body(responseMessage);
     }
 
     @GetMapping
-    public ResponseEntity<List<QuizDTO>> getAll() {
-        List<QuizDTO> quizzes = List.of();
+    public ResponseEntity<ResponseMessage<List<QuizDTO>>> getAll() {
+        ResponseMessage<List<QuizDTO>> responseMessage = new ResponseMessage<>();
+
         HttpStatus status = HttpStatus.OK;
         try {
-            quizzes = quizService.findAll();
+            responseMessage.ok(this.quizService.findAll());
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+            responseMessage.error(ex.getMessage());
         }
-        return ResponseEntity.status(status).body(quizzes);
+        return ResponseEntity.status(status).body(responseMessage);
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> add(@RequestBody QuizEntity quiz) {
+    public ResponseEntity<Boolean> add(@RequestBody QuizDTO quiz) {
         boolean result = true;
         HttpStatus status = HttpStatus.OK;
         try {
-            quizService.add(quiz);
+            this.quizService.add(quiz);
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result = false;
@@ -66,7 +70,7 @@ public class QuizController {
         boolean result = true;
         HttpStatus status = HttpStatus.OK;
         try {
-            quizService.update(quiz);
+            this.quizService.update(quiz);
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result = false;
@@ -75,16 +79,17 @@ public class QuizController {
     }
 
     @DeleteMapping("/{quizId}")
-    public ResponseEntity<Boolean> delete(@PathVariable("quizId") int quizId) {
-        boolean result = true;
+    public ResponseEntity<ResponseMessage<Boolean>> delete(@PathVariable("quizId") int quizId) {
+        ResponseMessage<Boolean> responseMessage = new ResponseMessage<>();
         HttpStatus status = HttpStatus.OK;
         try {
-            quizService.deleteById(quizId);
+            this.quizService.deleteById(quizId);
+            responseMessage.ok(true, "Delete quiz successful!");
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result = false;
+            responseMessage.error(false, ex.getMessage());
         }
-        return ResponseEntity.status(status).body(result);
+        return ResponseEntity.status(status).body(responseMessage);
     }
 
 }
