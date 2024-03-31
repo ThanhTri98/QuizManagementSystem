@@ -98,18 +98,15 @@ public class QuizController {
     }
 
     @PutMapping("/submit")
-    public ResponseEntity<ResponseMessage<Boolean>> delete(@RequestBody QuizHistoryRequest quizHistoryRequest) {
-        ResponseMessage<Boolean> responseMessage = new ResponseMessage<>();
+    public ResponseEntity<ResponseMessage<Double>> submit(@RequestBody QuizHistoryRequest quizHistoryRequest) {
+        ResponseMessage<Double> responseMessage = new ResponseMessage<>();
         HttpStatus status = HttpStatus.OK;
         try {
-            var rs = this.quizHistoryService.submit(quizHistoryRequest);
-            if (!rs) {
-                throw new Exception("Submit fail!");
-            }
-            responseMessage.ok(true, "Submit quiz successful!");
+            double score = this.quizHistoryService.submit(quizHistoryRequest);
+            responseMessage.ok(score, "Submit quiz successful!");
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            responseMessage.error(false, ex.getMessage());
+            responseMessage.error(ex.getMessage());
         }
         return ResponseEntity.status(status).body(responseMessage);
     }

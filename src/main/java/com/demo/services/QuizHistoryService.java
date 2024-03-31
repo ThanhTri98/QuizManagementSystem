@@ -46,7 +46,7 @@ public class QuizHistoryService {
     }
 
     @Transactional(rollbackOn = Throwable.class)
-    public boolean submit(final QuizHistoryRequest quizHistoryRequest) {
+    public double submit(final QuizHistoryRequest quizHistoryRequest) {
         quizHistoryRequest.setCreatedDate(new Date());
         quizHistoryRequest.setCompletionDate(new Date(System.currentTimeMillis() + 600000));
         log.info("QuizHistoryRequest {}", quizHistoryRequest);
@@ -55,6 +55,7 @@ public class QuizHistoryService {
             throw new IllegalArgumentException("The test was taken by this user!");
         }
 
+        AtomicReference<Double> currentSore = new AtomicReference<>(0d);
         this.userRepository.findById(quizHistoryRequest.getUserId())
                 .ifPresentOrElse(userE -> {
                     this.quizRepository.findById(quizHistoryRequest.getQuizId())
@@ -68,7 +69,6 @@ public class QuizHistoryService {
 
                                 // Số lượng câu hỏi của bài kiểm tra
                                 final double scorePerQuestion = 10d / quizE.getQuestions().size();
-                                AtomicReference<Double> currentSore = new AtomicReference<>(0d);
                                 final var questionMap = quizE.getQuestions().stream().collect(Collectors.toMap(
                                         QuestionEntity::getQuestionId, v -> v));
 
@@ -108,8 +108,8 @@ public class QuizHistoryService {
                                             .filter(lst -> !CollectionUtils.isEmpty(lst))
                                             .flatMap(Collection::stream)
                                             .toList();
-                                    quizHistory.setScore(Math.round(currentSore.get() * 10) / 10d);
 
+                                    quizHistory.setScore(Math.round(currentSore.get() * 10) / 10d);
                                     this.quizHistoryDetailRepository.saveAll(entities);
                                 } else {
                                     quizHistory.setScore(0d);
@@ -120,7 +120,7 @@ public class QuizHistoryService {
                 }, () -> {
                     throw new IllegalArgumentException("User not found!");
                 });
-        return true;
+        return currentSore.get();
     }
 
 
