@@ -19,12 +19,13 @@ public class JwtTokenProvider {
     private long jwtExpiration;
 
     // Tạo ra jwt từ thông tin user
-    public String generateToken(String email) {
+    public String generateToken(int userId, String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
         // Tạo chuỗi json web token từ id của user.
         return Jwts.builder()
                 .setSubject(email)
+                .setId(String.valueOf(userId))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -32,18 +33,26 @@ public class JwtTokenProvider {
     }
 
     // Lấy thông tin user email từ jwt
-    public String getEmailFromJWT(String token) {
+    public String getEmailFromJWT(String jwt) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
+                .parseClaimsJws(jwt)
                 .getBody()
                 .getSubject();
     }
 
-    public boolean validateToken(String authToken) {
+    public String getUserIdFromJWT(String jwt) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(jwt)
+                .getBody()
+                .getId();
+    }
+
+    public boolean validateToken(String jwt) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-            log.debug("validate success {}", authToken);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            log.debug("validate success {}", jwt);
             return true;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
@@ -53,7 +62,7 @@ public class JwtTokenProvider {
             log.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
-        }catch (SignatureException ex){
+        } catch (SignatureException ex) {
             log.error("JWT SignatureException.");
         }
         return false;

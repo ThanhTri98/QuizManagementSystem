@@ -1,9 +1,9 @@
 package com.demo.configuration;
 
-import com.demo.services.security.JwtTokenProvider;
+import com.demo.commons.util.JwtUtil;
+import com.demo.services.UserJwtService;
 import com.demo.services.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -27,13 +27,14 @@ import java.util.Map;
 @Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtTokenProvider tokenProvider;
     private final UserDetailsServiceImpl userDetailsService;
+    private final UserJwtService userJwtService;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, UserDetailsServiceImpl userDetailsService) {
-        this.tokenProvider = tokenProvider;
+    public JwtAuthenticationFilter(UserDetailsServiceImpl userDetailsService,
+                                   UserJwtService userJwtService) {
         this.userDetailsService = userDetailsService;
+        this.userJwtService = userJwtService;
     }
 
     @Override
@@ -46,10 +47,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             // Lấy jwt từ request
-            String jwt = getJwtFromRequest(request);
-            if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+            String jwt = JwtUtil.getJwtFromRequestHeader(request);
+            if (StringUtils.hasText(jwt) && this.userJwtService.isValidJwt(jwt)) {
                 // Lấy id user từ chuỗi jwt
-                String email = this.tokenProvider.getEmailFromJWT(jwt);
+                String email = this.userJwtService.getJwtTokenProvider().getEmailFromJWT(jwt);
                 // Lấy thông tin người dùng từ id
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
                 if (userDetails != null) {
@@ -73,17 +74,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        // Kiểm tra xem header Authorization có chứa thông tin jwt không
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
     private final Map<String, HttpMethod> passFilterMap = Map.of(
-            "/api/v1/login", HttpMethod.POST,
+            "/api/v1/auth/login", HttpMethod.POST,
             "/", HttpMethod.GET
     );
 

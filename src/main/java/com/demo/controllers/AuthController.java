@@ -1,7 +1,7 @@
 package com.demo.controllers;
 
 import com.demo.models.http.ResponseMessage;
-import com.demo.services.security.JwtTokenProvider;
+import com.demo.services.UserJwtService;
 import com.demo.services.security.LoginRequest;
 import com.demo.services.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("${config.api.prefix}")
-public class LoginController {
+public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider tokenProvider;
+    private final UserJwtService userJwtService;
 
     @Autowired
-    public LoginController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+    public AuthController(AuthenticationManager authenticationManager, UserJwtService userJwtService) {
         this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
+        this.userJwtService = userJwtService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<ResponseMessage<String>> login(@RequestBody LoginRequest loginRequest) {
         ResponseMessage<String> responseMessage = new ResponseMessage<>();
         HttpStatus status = HttpStatus.OK;
@@ -44,15 +44,18 @@ public class LoginController {
             // Set thông tin authentication vào Security Context
             SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
 
-            final String jwt = this.tokenProvider.generateToken(((UserDetailsImpl) authenticationResponse.getPrincipal()).getEmail());
+            UserDetailsImpl userDetails = (UserDetailsImpl) authenticationResponse.getPrincipal();
+
+            final String jwt = this.userJwtService.getJwtTokenProvider().generateToken(userDetails.getUserId(), userDetails.getEmail());
+
+            // Luu Database
+            this.userJwtService.upsert(userDetails.getUserId(), jwt);
             responseMessage.setData(jwt);
         } catch (Exception ex) {
             status = HttpStatus.UNAUTHORIZED;
-            responseMessage.setError(true);
-            responseMessage.setMessage("Email or Password invalid!");
+            responseMessage.error("Email or Password invalid!");
         }
         return ResponseEntity.status(status).body(responseMessage);
     }
-
 
 }

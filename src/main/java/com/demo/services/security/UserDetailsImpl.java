@@ -16,12 +16,15 @@ import java.util.Set;
  */
 public class UserDetailsImpl implements UserDetails {
     @Getter
+    private final int userId;
+    @Getter
     private final String email;
     private final String password;
     private final String userName;
     private final RoleEntity role;
 
     public UserDetailsImpl(@NonNull UserEntity user) {
+        this.userId = user.getUserId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.userName = user.getUserName();
