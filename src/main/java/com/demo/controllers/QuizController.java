@@ -4,6 +4,8 @@ package com.demo.controllers;
 import com.demo.models.dtos.QuizDTO;
 import com.demo.models.entities.QuizEntity;
 import com.demo.models.http.ResponseMessage;
+import com.demo.models.request.QuizHistoryRequest;
+import com.demo.services.QuizHistoryService;
 import com.demo.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,12 @@ import java.util.List;
 @RequestMapping("api/v1/quizzes")
 public class QuizController {
     private final QuizService quizService;
+    private final QuizHistoryService quizHistoryService;
 
     @Autowired
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, QuizHistoryService quizHistoryService) {
         this.quizService = quizService;
+        this.quizHistoryService = quizHistoryService;
     }
 
     @GetMapping("/{quizId}")
@@ -85,6 +89,23 @@ public class QuizController {
         try {
             this.quizService.deleteById(quizId);
             responseMessage.ok(true, "Delete quiz successful!");
+        } catch (Exception ex) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            responseMessage.error(false, ex.getMessage());
+        }
+        return ResponseEntity.status(status).body(responseMessage);
+    }
+
+    @PutMapping("/submit")
+    public ResponseEntity<ResponseMessage<Boolean>> delete(@RequestBody QuizHistoryRequest quizHistoryRequest) {
+        ResponseMessage<Boolean> responseMessage = new ResponseMessage<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var rs = this.quizHistoryService.submit(quizHistoryRequest);
+            if (!rs) {
+                throw new Exception("Submit fail!");
+            }
+            responseMessage.ok(true, "Submit quiz successful!");
         } catch (Exception ex) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             responseMessage.error(false, ex.getMessage());

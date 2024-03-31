@@ -2,6 +2,7 @@ package com.demo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -22,8 +23,10 @@ public class QuestionEntity {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
+    @ToString.Exclude
     private QuizEntity quiz;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<OptionEntity> options;
 }

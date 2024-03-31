@@ -2,6 +2,7 @@ package com.demo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -27,10 +28,12 @@ public class QuizHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
+    @ToString.Exclude
     private QuizEntity quiz;
 
 }

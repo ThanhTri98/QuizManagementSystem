@@ -39,6 +39,8 @@ public class SecurityConfiguration {
 
                                 .requestMatchers(joinPath("users", "**")).hasRole(Roles.TEACHER.name())
 
+                                .requestMatchers(HttpMethod.PUT, joinPath("quizzes", "submit")).hasRole(Roles.STUDENT.name())
+
                                 .requestMatchers(HttpMethod.GET, joinPath("quizzes", "**")).hasAnyRole(Roles.TEACHER.name(), Roles.STUDENT.name())
 
                                 .requestMatchers(HttpMethod.POST, joinPath("quizzes", "**")).hasRole(Roles.TEACHER.name())

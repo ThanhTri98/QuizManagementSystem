@@ -2,6 +2,7 @@ package com.demo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author 165139
@@ -25,5 +26,6 @@ public class UserEntity {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @ToString.Exclude
     private RoleEntity role;
 }

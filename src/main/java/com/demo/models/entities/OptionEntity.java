@@ -2,6 +2,7 @@ package com.demo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author 165139
@@ -23,5 +24,6 @@ public class OptionEntity {
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @ToString.Exclude
     private QuestionEntity question;
 }
