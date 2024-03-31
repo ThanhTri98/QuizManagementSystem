@@ -2,6 +2,7 @@
 package com.demo.controllers;
 
 import com.demo.models.dtos.QuizDTO;
+import com.demo.models.dtos.QuizHistoryDTO;
 import com.demo.models.entities.QuizEntity;
 import com.demo.models.http.ResponseMessage;
 import com.demo.models.request.QuizHistoryRequest;
@@ -113,4 +114,16 @@ public class QuizController {
         return ResponseEntity.status(status).body(responseMessage);
     }
 
+    @GetMapping("/history/{userId}/{quizId}")
+    public ResponseEntity<ResponseMessage<QuizHistoryDTO>> getQuizHistoryByQuizIdAndUserId(@PathVariable("userId") int userId, @PathVariable("quizId") int quizId) {
+        ResponseMessage<QuizHistoryDTO> responseMessage = new ResponseMessage<>();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            responseMessage.ok(this.quizHistoryService.findQuizHistoryByUserIdAndQuizId(userId, quizId));
+        } catch (Exception ex) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            responseMessage.error(ex.getMessage());
+        }
+        return ResponseEntity.status(status).body(responseMessage);
+    }
 }

@@ -14,4 +14,6 @@ import java.util.Optional;
 public interface QuizHistoryRepository extends JpaRepository<QuizHistoryEntity, Integer> {
     @Query("SELECT 1 FROM QuizHistoryEntity where user.userId = ?1 and quiz.quizId = ?2")
     Optional<Object> isExistUserAndQuiz(int userId, int quizId);
+
+    Optional<QuizHistoryEntity> findQuizHistoryEntityByUserUserIdAndQuizQuizId(int userId, int quizId);
 }
